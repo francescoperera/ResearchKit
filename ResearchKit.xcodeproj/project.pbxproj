@@ -22,14 +22,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		08F17EDE1D974F71002299F8 /* ORKGoNoGoStep.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F17EDC1D974F71002299F8 /* ORKGoNoGoStep.h */; };
-		08F17EDF1D974F71002299F8 /* ORKGoNoGoStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F17EDD1D974F71002299F8 /* ORKGoNoGoStep.m */; };
-		08F17EE21D974F93002299F8 /* ORKGoNoGoStepViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F17EE01D974F93002299F8 /* ORKGoNoGoStepViewController.h */; };
-		08F17EE31D974F93002299F8 /* ORKGoNoGoStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F17EE11D974F93002299F8 /* ORKGoNoGoStepViewController.m */; };
-		08F17EE61D974FAC002299F8 /* ORKGoNoGoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F17EE41D974FAC002299F8 /* ORKGoNoGoView.h */; };
-		08F17EE71D974FAC002299F8 /* ORKGoNoGoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F17EE51D974FAC002299F8 /* ORKGoNoGoView.m */; };
-		08F17EEA1D974FC2002299F8 /* ORKGoNoGo.h in Headers */ = {isa = PBXBuildFile; fileRef = 08F17EE81D974FC2002299F8 /* ORKGoNoGo.h */; };
-		08F17EEB1D974FC2002299F8 /* ORKGoNoGo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F17EE91D974FC2002299F8 /* ORKGoNoGo.m */; };
 		106FF29E1B663FCE004EACF2 /* ORKHolePegTestPlaceStep.h in Headers */ = {isa = PBXBuildFile; fileRef = 106FF29C1B663FCE004EACF2 /* ORKHolePegTestPlaceStep.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		106FF29F1B663FCE004EACF2 /* ORKHolePegTestPlaceStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 106FF29D1B663FCE004EACF2 /* ORKHolePegTestPlaceStep.m */; };
 		106FF2A21B665B86004EACF2 /* ORKHolePegTestPlaceStepViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 106FF2A01B665B86004EACF2 /* ORKHolePegTestPlaceStepViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -557,14 +549,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		08F17EDC1D974F71002299F8 /* ORKGoNoGoStep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORKGoNoGoStep.h; sourceTree = "<group>"; };
-		08F17EDD1D974F71002299F8 /* ORKGoNoGoStep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORKGoNoGoStep.m; sourceTree = "<group>"; };
-		08F17EE01D974F93002299F8 /* ORKGoNoGoStepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORKGoNoGoStepViewController.h; sourceTree = "<group>"; };
-		08F17EE11D974F93002299F8 /* ORKGoNoGoStepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORKGoNoGoStepViewController.m; sourceTree = "<group>"; };
-		08F17EE41D974FAC002299F8 /* ORKGoNoGoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORKGoNoGoView.h; sourceTree = "<group>"; };
-		08F17EE51D974FAC002299F8 /* ORKGoNoGoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORKGoNoGoView.m; sourceTree = "<group>"; };
-		08F17EE81D974FC2002299F8 /* ORKGoNoGo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORKGoNoGo.h; sourceTree = "<group>"; };
-		08F17EE91D974FC2002299F8 /* ORKGoNoGo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORKGoNoGo.m; sourceTree = "<group>"; };
 		106FF29C1B663FCE004EACF2 /* ORKHolePegTestPlaceStep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORKHolePegTestPlaceStep.h; sourceTree = "<group>"; };
 		106FF29D1B663FCE004EACF2 /* ORKHolePegTestPlaceStep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORKHolePegTestPlaceStep.m; sourceTree = "<group>"; };
 		106FF2A01B665B86004EACF2 /* ORKHolePegTestPlaceStepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORKHolePegTestPlaceStepViewController.h; sourceTree = "<group>"; };
@@ -1138,21 +1122,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08F17EB51D97417F002299F8 /* GoNoGo */ = {
-			isa = PBXGroup;
-			children = (
-				08F17EDC1D974F71002299F8 /* ORKGoNoGoStep.h */,
-				08F17EDD1D974F71002299F8 /* ORKGoNoGoStep.m */,
-				08F17EE01D974F93002299F8 /* ORKGoNoGoStepViewController.h */,
-				08F17EE11D974F93002299F8 /* ORKGoNoGoStepViewController.m */,
-				08F17EE41D974FAC002299F8 /* ORKGoNoGoView.h */,
-				08F17EE51D974FAC002299F8 /* ORKGoNoGoView.m */,
-				08F17EE81D974FC2002299F8 /* ORKGoNoGo.h */,
-				08F17EE91D974FC2002299F8 /* ORKGoNoGo.m */,
-			);
-			name = GoNoGo;
-			sourceTree = "<group>";
-		};
 		106FF29B1B663F5C004EACF2 /* Hole Peg Test */ = {
 			isa = PBXGroup;
 			children = (
@@ -1469,7 +1438,6 @@
 		86C40AF91A8D7C5B00081FAC /* Active Tasks */ = {
 			isa = PBXGroup;
 			children = (
-				08F17EB51D97417F002299F8 /* GoNoGo */,
 				B12EFF4F1AB2165B00A80147 /* Common */,
 				B12EFF4E1AB2161500A80147 /* Audio */,
 				B12EFF5D1AB2177700A80147 /* Fitness */,
@@ -2354,7 +2322,6 @@
 				86C40D8E1A8D7C5C00081FAC /* ORKStep.h in Headers */,
 				618DA04E1A93D0D600E63AA8 /* ORKAccessibility.h in Headers */,
 				86B781BB1AA668ED00688151 /* ORKTimeIntervalPicker.h in Headers */,
-				08F17EEA1D974FC2002299F8 /* ORKGoNoGo.h in Headers */,
 				24C296751BD052F800B42EF1 /* ORKVerificationStep_Internal.h in Headers */,
 				86C40C6A1A8D7C5C00081FAC /* CMDeviceMotion+ORKJSONDictionary.h in Headers */,
 				86C40CE41A8D7C5C00081FAC /* ORKAnswerFormat.h in Headers */,
@@ -2394,7 +2361,6 @@
 				BF91559B1BDE8D7D007FA459 /* ORKReviewStep_Internal.h in Headers */,
 				BF91559E1BDE8D7E007FA459 /* ORKReviewStepViewController_Internal.h in Headers */,
 				FF5CA61B1D2C6453001660A3 /* ORKSignatureStep.h in Headers */,
-				08F17EE61D974FAC002299F8 /* ORKGoNoGoView.h in Headers */,
 				25ECC0A31AFBDD2700F3D63B /* ORKReactionTimeStimulusView.h in Headers */,
 				106FF2AA1B690FD7004EACF2 /* ORKHolePegTestPlacePegView.h in Headers */,
 				86C40D701A8D7C5C00081FAC /* ORKRoundTappingButton.h in Headers */,
@@ -2448,7 +2414,6 @@
 				86C40CA81A8D7C5C00081FAC /* ORKPedometerRecorder.h in Headers */,
 				86C40CD01A8D7C5C00081FAC /* ORKInstructionStepView.h in Headers */,
 				86C40E021A8D7C5C00081FAC /* ORKConsentDocument_Internal.h in Headers */,
-				08F17EE21D974F93002299F8 /* ORKGoNoGoStepViewController.h in Headers */,
 				86C40E181A8D7C5C00081FAC /* ORKConsentSection.h in Headers */,
 				86AD910A1AB7AD1E00361FEB /* ORKNavigationContainerView.h in Headers */,
 				865EA16C1ABA1BE20037C68E /* ORKSurveyAnswerCellForPicker.h in Headers */,
@@ -2473,7 +2438,6 @@
 				86C40D0E1A8D7C5C00081FAC /* ORKCustomStepView_Internal.h in Headers */,
 				86C40CF21A8D7C5C00081FAC /* ORKBodyLabel.h in Headers */,
 				106FF2B41B71F18E004EACF2 /* ORKHolePegTestPlaceHoleView.h in Headers */,
-				08F17EDE1D974F71002299F8 /* ORKGoNoGoStep.h in Headers */,
 				86C40D921A8D7C5C00081FAC /* ORKStep_Private.h in Headers */,
 				86C40CC41A8D7C5C00081FAC /* ORKCompletionStepViewController.h in Headers */,
 				FF36A49C1D1A15FC00DE8470 /* ORKTableStepViewController_Internal.h in Headers */,
@@ -2942,13 +2906,11 @@
 				86C40CDE1A8D7C5C00081FAC /* ORKTintedImageView.m in Sources */,
 				86B781BC1AA668ED00688151 /* ORKTimeIntervalPicker.m in Sources */,
 				86B781BE1AA668ED00688151 /* ORKValuePicker.m in Sources */,
-				08F17EE71D974FAC002299F8 /* ORKGoNoGoView.m in Sources */,
 				86B89ABC1AB3BECC001626A4 /* ORKStepHeaderView.m in Sources */,
 				861D11AA1AA691BB003C98A7 /* ORKScaleSliderView.m in Sources */,
 				86C40C141A8D7C5C00081FAC /* ORKActiveStepQuantityView.m in Sources */,
 				86C40C6C1A8D7C5C00081FAC /* CMDeviceMotion+ORKJSONDictionary.m in Sources */,
 				86C40DF01A8D7C5C00081FAC /* UIResponder+ResearchKit.m in Sources */,
-				08F17EE31D974F93002299F8 /* ORKGoNoGoStepViewController.m in Sources */,
 				865EA16D1ABA1BE20037C68E /* ORKSurveyAnswerCellForPicker.m in Sources */,
 				BF9155AA1BDE8DA9007FA459 /* ORKWaitStepView.m in Sources */,
 				86C40D261A8D7C5C00081FAC /* ORKFormStepViewController.m in Sources */,
@@ -2962,7 +2924,6 @@
 				D442397E1AF17F7600559D96 /* ORKImageCaptureStepViewController.m in Sources */,
 				86C40CAE1A8D7C5C00081FAC /* ORKRecorder.m in Sources */,
 				86C40DAC1A8D7C5C00081FAC /* ORKSurveyAnswerCellForNumber.m in Sources */,
-				08F17EEB1D974FC2002299F8 /* ORKGoNoGo.m in Sources */,
 				86C40C541A8D7C5C00081FAC /* ORKTappingIntervalStep.m in Sources */,
 				86C40D6C1A8D7C5C00081FAC /* ORKResult.m in Sources */,
 				86C40CD21A8D7C5C00081FAC /* ORKInstructionStepView.m in Sources */,
@@ -3000,7 +2961,6 @@
 				24A4DA191B8D13FE009C797A /* ORKPasscodeStepViewController.m in Sources */,
 				BF9155A81BDE8DA9007FA459 /* ORKWaitStep.m in Sources */,
 				86C40CEC1A8D7C5C00081FAC /* ORKAnswerTextField.m in Sources */,
-				08F17EDF1D974F71002299F8 /* ORKGoNoGoStep.m in Sources */,
 				86C40C441A8D7C5C00081FAC /* ORKSpatialSpanMemoryStep.m in Sources */,
 				BCB080A11B83EFB900A3F400 /* ORKStepNavigationRule.swift in Sources */,
 				24898B0E1B7186C000B0E7E7 /* ORKScaleRangeImageView.m in Sources */,

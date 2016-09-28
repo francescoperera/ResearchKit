@@ -99,6 +99,8 @@ enum TaskListRow: Int, CustomStringConvertible {
     case WalkBackAndForth
     case TremorTest
     
+    case GoNoGo
+    
     class TaskListRowSection {
         var title: String
         var rows: [TaskListRow]
@@ -158,7 +160,8 @@ enum TaskListRow: Int, CustomStringConvertible {
                     .TowerOfHanoi,
                     .TwoFingerTappingInterval,
                     .WalkBackAndForth,
-                    .TremorTest
+                    .TremorTest,
+                    .GoNoGo
                 ]),
         ]}
     
@@ -273,6 +276,8 @@ enum TaskListRow: Int, CustomStringConvertible {
             
         case .TremorTest:
             return NSLocalizedString("Tremor Test", comment: "")
+        case .GoNoGo:
+            return NSLocalizedString("Go No Go Test", comment: "")
         }
     }
     
@@ -425,6 +430,7 @@ enum TaskListRow: Int, CustomStringConvertible {
         case TwoFingerTappingIntervalTask
         case WalkBackAndForthTask
         case TremorTestTask
+        case GoNoGoTask
     }
     
     // MARK: Properties
@@ -539,6 +545,9 @@ enum TaskListRow: Int, CustomStringConvertible {
             
         case .TremorTest:
             return tremorTestTask
+        
+        case .GoNoGo:
+            return GoNoGoTask
         }
     }
 
@@ -1242,6 +1251,21 @@ enum TaskListRow: Int, CustomStringConvertible {
                                                            activeTaskOptions: [],
                                                            handOptions: [.Both],
                                                            options: [])
+    }
+    
+    //This task presents the GoNoGo Task.
+    private var GoNoGoTask: ORKTask{
+        let params = CTFGoNoGoStepParams(
+            waitTime: 0.25,
+            crossTime: 0.25,
+            blankTime: 0.25,
+            cueTimeOptions: [0.25],
+            fillTime: 0.4,
+            goCueTargetProb: 0.7,
+            noGoCueTargetProb: 0.7,
+            goCueProb: 0.5)
+        
+        return ORKOrderedTask.goNoGo(String(Identifier.GoNoGoTask), params: params)
     }
 
     // MARK: Consent Document Creation Convenience
