@@ -1263,7 +1263,8 @@ enum TaskListRow: Int, CustomStringConvertible {
             fillTime: 0.4,
             goCueTargetProb: 0.7,
             noGoCueTargetProb: 0.7,
-            goCueProb: 0.5)
+            goCueProb: 0.5,
+            numTrials: 10)
         
         return ORKOrderedTask.goNoGo(String(Identifier.GoNoGoTask), params: params)
     }
