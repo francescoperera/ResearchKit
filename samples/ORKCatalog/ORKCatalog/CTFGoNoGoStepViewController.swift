@@ -21,16 +21,16 @@ enum CTFGoNoGoTargetType {
 
 struct CTFGoNoGoTrial {
     
-    var waitTime: NSTimeInterval?
-    var crossTime : NSTimeInterval?
-    var blankTime:NSTimeInterval?
-    var cueTime: NSTimeInterval?
-    var fillTime : NSTimeInterval?
+    var waitTime: NSTimeInterval!
+    var crossTime : NSTimeInterval!
+    var blankTime:NSTimeInterval!
+    var cueTime: NSTimeInterval!
+    var fillTime : NSTimeInterval!
     
-    var cue: CTFGoNoGoCueType?
-    var target: CTFGoNoGoTargetType?
+    var cue: CTFGoNoGoCueType!
+    var target: CTFGoNoGoTargetType!
     
-    var trialIndex: Int?
+    var trialIndex: Int!
     
 }
 
@@ -55,12 +55,27 @@ extension Array {
     }
 }
 
-class CTFGoNoGoStepViewController: ORKStepViewController {
+class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate {
 
     
     @IBOutlet weak var goNoGoView: CTFGoNoGoView!
+    @IBOutlet weak var feedbackLabel: UILabel!
+    
+    var correctFeedbackColor: UIColor? = UIColor(red: 52.0/255.0, green: 152.0/255.0, blue: 219.0/255.0, alpha: 1.0)
+    var incorrectFeedbackColor: UIColor? = UIColor(red: 231.0/255.0, green: 76.0/255.0, blue: 60.0/255.0, alpha: 1.0)
     
     var trials: [CTFGoNoGoTrial]?
+    var trialResults: [CTFGoNoGoTrialResult]?
+    
+//    var trialTimer: NSTimer?
+//    var trialCompletion: ((NSDate?) -> ())?
+    
+    var tapTime: NSDate? = nil
+    
+    var canceled = false
+    
+    let RFC3339DateFormatter = NSDateFormatter()
+    
     override init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -78,12 +93,25 @@ class CTFGoNoGoStepViewController: ORKStepViewController {
         self.trials = self.generateTrials(params)
     }
     
+    func coinFlip<T>(obj1: T, obj2: T, bias: Float = 0.5) -> T {
+        
+        let realBias: Float = min(bias, 1.0)
+        let flip = Float(arc4random()) /  Float(UInt32.max)
+        
+        if flip < realBias {
+            return obj1
+        }
+        else {
+            return obj2
+        }
+    }
+    
     func generateTrials(goNoGoParams:CTFGoNoGoStepParams) -> [CTFGoNoGoTrial]? {
         if let numTrials = goNoGoParams.numTrials {
             return (0..<numTrials).map { index in
                 let cueTime: NSTimeInterval = (goNoGoParams.cueTimeOptions?.random())!
-                let cueType: CTFGoNoGoCueType = [CTFGoNoGoCueType.Go, CTFGoNoGoCueType.NoGo].random()!
-                let targetType: CTFGoNoGoTargetType = [CTFGoNoGoTargetType.Go, CTFGoNoGoTargetType.NoGo].random()!
+                let cueType: CTFGoNoGoCueType = self.coinFlip(CTFGoNoGoCueType.Go, obj2: CTFGoNoGoCueType.NoGo)
+                let targetType: CTFGoNoGoTargetType = self.coinFlip(CTFGoNoGoTargetType.Go, obj2: CTFGoNoGoTargetType.NoGo, bias: (cueType == CTFGoNoGoCueType.Go) ? 0.7: 0.3)
                 
                 return CTFGoNoGoTrial(
                     waitTime: goNoGoParams.waitTime,
@@ -113,14 +141,32 @@ class CTFGoNoGoStepViewController: ORKStepViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        self.RFC3339DateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        self.RFC3339DateFormatter.dateFormat = "HH:mm:ss.SSS"
+        
+        self.goNoGoView.delegate = self
 
         // Do any additional setup after loading the view.
+        
+        //clear results
         if let trials = self.trials {
             self.performTrials(trials, results: [], completion: { (results) in
                 print(results)
+                if !self.canceled {
+                    //set results
+                    self.trialResults = results
+                    self.goForward()
+                }
             })
         }
         
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.canceled = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -136,6 +182,10 @@ class CTFGoNoGoStepViewController: ORKStepViewController {
     }
     
     func performTrials(trials: [CTFGoNoGoTrial], results: [CTFGoNoGoTrialResult], completion: ([CTFGoNoGoTrialResult]) -> ()) {
+        if self.canceled {
+            completion([])
+            return
+        }
         if let head = trials.first {
             let tail = Array(trials.dropFirst())
             doTrial(head, completion: { (result) in
@@ -149,21 +199,110 @@ class CTFGoNoGoStepViewController: ORKStepViewController {
         }
     }
     
-    //impliment trial
-    func doTrial(trial: CTFGoNoGoTrial, completion: (CTFGoNoGoTrialResult) -> ()) {
-        let result = CTFGoNoGoTrialResult(trial: trial, responseTime: 0.0, tapped: true)
-        completion(result)
+    func delay(delay:NSTimeInterval, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    //impliment trial
+    func doTrial(trial: CTFGoNoGoTrial, completion: (CTFGoNoGoTrialResult) -> ()) {
+        
+        let delay = self.delay
+        let goNoGoView = self.goNoGoView
+        
+        goNoGoView.state = CTFGoNoGoState.Blank
+        
+        print("Trial number \(trial.trialIndex)")
+        
+        delay(trial.waitTime) {
+            
+            goNoGoView.state = CTFGoNoGoState.Cross
+            
+            delay(trial.crossTime) {
+                
+                goNoGoView.state = CTFGoNoGoState.Blank
+                
+                delay(trial.blankTime) {
+                    
+                    if trial.cue == CTFGoNoGoCueType.Go {
+                        goNoGoView.state = CTFGoNoGoState.GoCue
+                    }
+                    else {
+                        goNoGoView.state = CTFGoNoGoState.NoGoCue
+                    }
+                    
+                    delay(trial.cueTime!) {
+                        
+                        if trial.cue == CTFGoNoGoCueType.Go {
+                            if trial.target == CTFGoNoGoTargetType.Go {
+                                goNoGoView.state = CTFGoNoGoState.GoCueGoTarget
+                            }
+                            else {
+                                goNoGoView.state = CTFGoNoGoState.GoCueNoGoTarget
+                            }
+                            
+                        }
+                        else {
+                            if trial.target == CTFGoNoGoTargetType.Go {
+                                goNoGoView.state = CTFGoNoGoState.NoGoCueGoTarget
+                            }
+                            else {
+                                goNoGoView.state = CTFGoNoGoState.NoGoCueNoGoTarget
+                            }
+                        }
+                        
+                        //race for tap and timer expiration
+                        let startTime: NSDate = NSDate()
+                        print("Start time: \(self.RFC3339DateFormatter.stringFromDate(startTime))")
+                        self.tapTime = nil
+                        
+                        delay(trial.fillTime) {
+                            let tapped = self.tapTime != nil
+                            let responseTime: NSTimeInterval = (tapped ? self.tapTime!.timeIntervalSinceDate(startTime) : trial.fillTime) * 1000
+                            
+                            if let tapTime = self.tapTime {
+                                print("Tapped Handler: \(self.RFC3339DateFormatter.stringFromDate(tapTime))")
+                            }
+                            
+                            goNoGoView.state = CTFGoNoGoState.Blank
+                            
+                            if tapped {
+                                if trial.target == CTFGoNoGoTargetType.Go {
+                                    self.feedbackLabel.text = "Correct! \(String(format: "%0.0f", responseTime)) ms"
+                                    self.feedbackLabel.textColor = self.correctFeedbackColor
+                                }
+                                else {
+                                    self.feedbackLabel.text = "Incorrect"
+                                    self.feedbackLabel.textColor = self.incorrectFeedbackColor
+                                }
+                                self.feedbackLabel.hidden = false
+                            }
+                            delay(trial.waitTime) {
+                                
+                                let result = CTFGoNoGoTrialResult(trial: trial, responseTime: responseTime, tapped: tapped)
+                                completion(result)
+                            }
+                            
+                            delay(0.6) {
+                                self.feedbackLabel.hidden = true
+                            }
+                        }
+                    }
+                }
+                
+            }
+            
+        }
     }
-    */
+    
+    func goNoGoViewDidTap(goNoGoView: CTFGoNoGoView) {
+        if self.tapTime == nil {
+            self.tapTime = NSDate()
+        }
+    }
 
 }

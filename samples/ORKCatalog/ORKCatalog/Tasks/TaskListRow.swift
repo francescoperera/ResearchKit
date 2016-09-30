@@ -1257,14 +1257,14 @@ enum TaskListRow: Int, CustomStringConvertible {
     private var GoNoGoTask: ORKTask{
         let params = CTFGoNoGoStepParams(
             waitTime: 0.25,
-            crossTime: 0.25,
-            blankTime: 0.25,
+            crossTime: 0.5,
+            blankTime: 0.3,
             cueTimeOptions: [0.25],
-            fillTime: 0.4,
+            fillTime: 0.5,
             goCueTargetProb: 0.7,
             noGoCueTargetProb: 0.7,
             goCueProb: 0.5,
-            numTrials: 10)
+            numTrials: 75)
         
         return ORKOrderedTask.goNoGo(String(Identifier.GoNoGoTask), params: params)
     }

@@ -11,12 +11,12 @@ import UIKit
 enum CTFGoNoGoState {
     case Blank
     case Cross
-    case HorizontalCue
-    case VerticalCue
-    case HorizontalNoGo
-    case VerticalNoGo
-    case HorizontalGo
-    case VerticalGo
+    case GoCue
+    case NoGoCue
+    case GoCueNoGoTarget
+    case NoGoCueNoGoTarget
+    case GoCueGoTarget
+    case NoGoCueGoTarget
 }
 
 protocol CTFGoNoGoViewDelegate {
@@ -28,23 +28,26 @@ class CTFGoNoGoView: UIView {
     let crossView = UIImageView(image: UIImage(named: "cross"))
     let horizontalRectangle = UIView(frame: CGRectMake(0, 0, 200, 100))
     let verticalRectangle = UIView(frame: CGRectMake(0, 0, 100, 200))
+    
+    
     var delegate: CTFGoNoGoViewDelegate?
     
     var goColor = UIColor(red: 46.0/255.0, green: 204.0/255.0, blue: 113.0/255.0, alpha: 1.0)
     var noGoColor = UIColor(red: 41.0/255.0, green: 128.0/255.0, blue: 185.0/255.0, alpha: 1.0)
     
+    let RFC3339DateFormatter = NSDateFormatter()
     
     func configureHorizontalViewForState(state: CTFGoNoGoState) {
         self.horizontalRectangle.hidden = !(
-            state == .HorizontalCue ||
-                state == .HorizontalGo ||
-                state == .HorizontalNoGo
+            state == .GoCue ||
+                state == .GoCueGoTarget ||
+                state == .GoCueNoGoTarget
         )
         
-        if state == .HorizontalGo {
+        if state == .GoCueGoTarget {
             horizontalRectangle.backgroundColor = self.goColor
         }
-        else if self.state == .HorizontalNoGo {
+        else if self.state == .GoCueNoGoTarget {
             horizontalRectangle.backgroundColor = self.noGoColor
         }
         else {
@@ -54,15 +57,15 @@ class CTFGoNoGoView: UIView {
     
     func configureVerticalViewForState(state: CTFGoNoGoState) {
         self.verticalRectangle.hidden = !(
-            state == .VerticalCue ||
-                state == .VerticalGo ||
-                state == .VerticalNoGo
+            state == .NoGoCue ||
+                state == .NoGoCueGoTarget ||
+                state == .NoGoCueNoGoTarget
         )
         
-        if state == .HorizontalGo {
+        if state == .NoGoCueGoTarget {
             verticalRectangle.backgroundColor = self.goColor
         }
-        else if self.state == .HorizontalNoGo {
+        else if self.state == .NoGoCueNoGoTarget {
             verticalRectangle.backgroundColor = self.noGoColor
         }
         else {
@@ -76,10 +79,10 @@ class CTFGoNoGoView: UIView {
             self.configureVerticalViewForState(self.state)
             self.configureHorizontalViewForState(self.state)
             self.userInteractionEnabled = (
-                self.state == .VerticalGo ||
-                    self.state == .VerticalNoGo ||
-                    self.state == .HorizontalGo ||
-                    self.state == .HorizontalNoGo
+                self.state == .GoCueNoGoTarget ||
+                    self.state == .NoGoCueNoGoTarget ||
+                    self.state == .GoCueGoTarget ||
+                    self.state == .NoGoCueGoTarget
             )
             
         }
@@ -104,7 +107,9 @@ class CTFGoNoGoView: UIView {
     }
     
     func setupView() {
-//        self.backgroundColor = UIColor.blueColor()
+        
+        self.RFC3339DateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        self.RFC3339DateFormatter.dateFormat = "HH:mm:ss.SSS"
         
         self.crossView.contentMode = UIViewContentMode.ScaleAspectFit
         self.addSubview(self.crossView)
@@ -130,7 +135,7 @@ class CTFGoNoGoView: UIView {
     }
     
     func screenTapped() {
-        
+        print("Screen tapped: \(self.RFC3339DateFormatter.stringFromDate(NSDate()))")
         self.delegate?.goNoGoViewDidTap(self)
         
     }

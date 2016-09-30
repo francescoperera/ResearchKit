@@ -2,11 +2,12 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CTFGoNoGoStepViewController" customModule="ORKCatalog" customModuleProvider="target">
             <connections>
+                <outlet property="feedbackLabel" destination="eNs-Xy-ROB" id="Vvl-6l-l3q"/>
                 <outlet property="goNoGoView" destination="ddD-iK-tVC" id="enJ-lB-7VH"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -18,7 +19,23 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ddD-iK-tVC" customClass="CTFGoNoGoView" customModule="ORKCatalog" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Feedback" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eNs-Xy-ROB">
+                            <rect key="frame" x="0.0" y="559" width="600" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="21" id="fOd-Oi-v4X"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="eNs-Xy-ROB" secondAttribute="bottom" constant="20" id="18I-A5-hwi"/>
+                        <constraint firstItem="eNs-Xy-ROB" firstAttribute="leading" secondItem="ddD-iK-tVC" secondAttribute="leading" id="FQi-m5-ae5"/>
+                        <constraint firstAttribute="trailing" secondItem="eNs-Xy-ROB" secondAttribute="trailing" id="pbV-81-fwm"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
