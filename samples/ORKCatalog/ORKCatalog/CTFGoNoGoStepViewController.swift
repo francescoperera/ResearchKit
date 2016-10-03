@@ -154,6 +154,16 @@ class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate 
         if let trials = self.trials {
             self.performTrials(trials, results: [], completion: { (results) in
                 print(results)
+                // results is a list that contains all the trial results - Francesco
+                let aggregateResults = self.calculateAggregateResults(results)
+                print(aggregateResults)
+                print("The average response time was " + String(aggregateResults.0))
+                print("The total number of correct responses was " + String(aggregateResults.1))
+                print("The total number of incorrect responses was " + String(aggregateResults.2))
+                print("The total number of commissions was " + String(aggregateResults.3))
+                print("The total number of ommissions was " + String(aggregateResults.4))
+                
+            
                 if !self.canceled {
                     //set results
                     self.trialResults = results
@@ -304,5 +314,64 @@ class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate 
             self.tapTime = NSDate()
         }
     }
+    
+    func calculateAggregateResults(results:[CTFGoNoGoTrialResult])->(Double,Int,Int,Int,Int){
+        /**
+         * uses data in results to calculate the following parameters:
+            1) mean response time
+            2) number of correct answers
+            3) number of incorrect answers
+            4) number of commissions ( hit when not supposed to)
+            5) number of ommisions ( not hit when supposed to )
+        */
+        let meanResponseTime = results.map{$0.responseTime!}.reduce(0, combine:{$0 + $1})/Double(results.count)
+        print(meanResponseTime)
+        let responses = results.map{checkResponse($0.trial, tapped: $0.tapped)}
+        print(responses)
+        let correctResponses = responses.filter{$0==1 || $0==4}.count
+        let incorrectResponses = responses.filter{$0==2 || $0==3}.count
+        let commissions = responses.filter{$0==3}.count
+        let ommissions = responses.filter{$0==2}.count
+        return (meanResponseTime,correctResponses,incorrectResponses,commissions,ommissions)
+    }
+    
+    func checkResponse(trial:CTFGoNoGoTrial?,tapped:Bool?) -> Int{
+        /**
+         * checkResponses uses the trial.target and compares to the bool tapped and returns an Int.
+         * response codes:
+            1 :Go target and user taps
+            2: Go target and user does not tap
+            3: No Go target and user taps
+            4: No Go target and user does not tap
+        */
+        let targetType = trial!.target
+        let userResponse = tapped!
+        var responseValue = 0
+        switch (targetType!) {
+            case CTFGoNoGoTargetType.Go:
+            
+                switch(userResponse){
+                case true:
+                    responseValue = 1
+                case false:
+                    responseValue = 2
+            }
+            
+            case CTFGoNoGoTargetType.NoGo:
+            
+                switch(userResponse){
+                case true:
+                    responseValue = 3
+                case false:
+                    responseValue = 4
+            }
+            
+        }
+        return responseValue
+    }
+    
+    
+    
+
 
 }
