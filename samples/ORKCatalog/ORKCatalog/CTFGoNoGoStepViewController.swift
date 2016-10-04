@@ -19,6 +19,22 @@ enum CTFGoNoGoTargetType {
     case NoGo
 }
 
+
+
+enum CTFGoNoGoResponseCode{
+    /**
+     * correctBlue = user does not tap when rectangle is blue (NoGo target)
+     * incorrectBlue = user taps when rectangle is blue ( NoGo target)
+     * correctGreen = user taps when rectangle is green (Go target)
+     * incorrectGreen = user does not tap when rectangle is green (Go target)
+    */
+    case Default
+    case correctBlue
+    case incorrectBlue
+    case correctGreen
+    case incorrectGreen
+}
+
 struct CTFGoNoGoTrial {
     
     var waitTime: NSTimeInterval!
@@ -324,18 +340,20 @@ class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate 
             4) number of commissions ( hit when not supposed to)
             5) number of ommisions ( not hit when supposed to )
         */
-        let meanResponseTime = results.map{$0.responseTime!}.reduce(0, combine:{$0 + $1})/Double(results.count)
-        print(meanResponseTime)
-        let responses = results.map{checkResponse($0.trial, tapped: $0.tapped)}
-        print(responses)
-        let correctResponses = responses.filter{$0==1 || $0==4}.count
-        let incorrectResponses = responses.filter{$0==2 || $0==3}.count
-        let commissions = responses.filter{$0==3}.count
-        let ommissions = responses.filter{$0==2}.count
-        return (meanResponseTime,correctResponses,incorrectResponses,commissions,ommissions)
+//        let meanResponseTime = results.map{$0.responseTime!}.reduce(0, combine:{$0 + $1})/Double(results.count)
+//        print(meanResponseTime)
+//        let responses = results.map{checkResponse($0.trial, tapped: $0.tapped)}
+//        print(responses)
+//        let correctResponses = responses.filter{$0 == CTFGoNoGoResponseCode.correctGreen || $0 == CTFGoNoGoResponseCode.correctBlue}.count
+//        let incorrectResponses = responses.filter{$0 == CTFGoNoGoResponseCode.incorrectGreen || $0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+//        let commissions = responses.filter{$0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+//        let ommissions = responses.filter{$0 == CTFGoNoGoResponseCode.incorrectGreen}.count
+//        return (meanResponseTime,correctResponses,incorrectResponses,commissions,ommissions)
+        let trialResponseCodeAndTime = results.map{(checkResponse($0.trial, tapped: $0.tapped),$0.responseTime)}
+        
     }
     
-    func checkResponse(trial:CTFGoNoGoTrial?,tapped:Bool?) -> Int{
+    func checkResponse(trial:CTFGoNoGoTrial?,tapped:Bool?) -> CTFGoNoGoResponseCode{
         /**
          * checkResponses uses the trial.target and compares to the bool tapped and returns an Int.
          * response codes:
@@ -346,28 +364,28 @@ class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate 
         */
         let targetType = trial!.target
         let userResponse = tapped!
-        var responseValue = 0
+        var responseCode = CTFGoNoGoResponseCode.Default
         switch (targetType!) {
             case CTFGoNoGoTargetType.Go:
             
                 switch(userResponse){
                 case true:
-                    responseValue = 1
+                    responseCode = CTFGoNoGoResponseCode.correctGreen
                 case false:
-                    responseValue = 2
+                    responseCode = CTFGoNoGoResponseCode.incorrectGreen
             }
             
             case CTFGoNoGoTargetType.NoGo:
             
                 switch(userResponse){
                 case true:
-                    responseValue = 3
+                    responseCode = CTFGoNoGoResponseCode.incorrectBlue
                 case false:
-                    responseValue = 4
+                    responseCode = CTFGoNoGoResponseCode.correctBlue
             }
             
         }
-        return responseValue
+        return responseCode
     }
     
     
