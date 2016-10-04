@@ -339,12 +339,6 @@ class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate 
         let trialResponseCodeAndTime = results.map{(checkResponse($0.trial, tapped: $0.tapped),$0.responseTime!)}
         print(trialResponseCodeAndTime)
         
-        //Mean Response Time
-        let taskMeanResponseTime = trialResponseCodeAndTime.map{$0.1}.reduce(0, combine:{$0 + $1})/Double(results.count)
-        let firstThirdMeanResponseTime = trialResponseCodeAndTime[0...firstThird].map{$0.1}.reduce(0, combine:{$0 + $1})/Double(results.count * 1/3)
-        let secondThirdMeanResponseTime = trialResponseCodeAndTime[firstThird+1...secondThird].map{$0.1}.reduce(0, combine:{$0 + $1})/Double(results.count * 1/3)
-        let lastThirdMeanResponseTime = trialResponseCodeAndTime[secondThird+1...results.count-1].map{$0.1}.reduce(0, combine:{$0 + $1})/Double(results.count * 1/3)
-        print(taskMeanResponseTime,firstThirdMeanResponseTime,secondThirdMeanResponseTime,lastThirdMeanResponseTime)
         
         //Number of  Total Correct Responses
         let taskNumCorrectResponses = trialResponseCodeAndTime.filter{$0.0 == CTFGoNoGoResponseCode.correctGreen || $0.0 == CTFGoNoGoResponseCode.correctBlue}.count
@@ -393,17 +387,56 @@ class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate 
         let secondThirdNumIncorrectGreenResponses = trialResponseCodeAndTime[firstThird+1...secondThird].filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen}.count
         let lastThirdNumIncorrectGreenResponses = trialResponseCodeAndTime[secondThird+1...results.count-1].filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen}.count
         print(taskNumIncorrectGreenResponses,firstThirdNumIncorrectGreenResponses,secondThirdNumIncorrectGreenResponses,lastThirdNumIncorrectGreenResponses)
+        
+        //Mean Accuracy
+        let taskMeanAccuracy = trialResponseCodeAndTime.filter{$0.0 == CTFGoNoGoResponseCode.correctGreen ||
+                                                               $0.0 == CTFGoNoGoResponseCode.correctBlue}.count/(trialResponseCodeAndTime.count)
+        let firstThirdMeanAccuracy = trialResponseCodeAndTime[0...firstThird].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen ||
+                                                                                     $0.0 == CTFGoNoGoResponseCode.correctBlue}.count/(trialResponseCodeAndTime.count)
+        let secondThirdMeanAccuracy = trialResponseCodeAndTime[firstThird+1...secondThird].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen ||
+                                                                                            $0.0 == CTFGoNoGoResponseCode.correctBlue}.count/(trialResponseCodeAndTime.count)
+        let lastThirdMeanAccuracy = trialResponseCodeAndTime[secondThird+1...results.count-1].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen ||
+                                                                                            $0.0 == CTFGoNoGoResponseCode.correctBlue}.count/(trialResponseCodeAndTime.count)
+        print(taskMeanAccuracy,firstThirdMeanAccuracy,secondThirdMeanAccuracy,lastThirdMeanAccuracy)
+        
+        
+        //Mean Response Time
+        let taskMeanResponseTime = trialResponseCodeAndTime.map{$0.1}.reduce(0, combine:{$0 + $1})/Double(trialResponseCodeAndTime.count)
+        let firstThirdMeanResponseTime = trialResponseCodeAndTime[0...firstThird].map{$0.1}.reduce(0, combine:{$0 + $1})/Double(trialResponseCodeAndTime.count * 1/3)
+        let secondThirdMeanResponseTime = trialResponseCodeAndTime[firstThird+1...secondThird].map{$0.1}
+                                                                                              .reduce(0, combine:{$0 + $1})/Double(trialResponseCodeAndTime.count * 1/3)
+        let lastThirdMeanResponseTime = trialResponseCodeAndTime[secondThird+1...results.count-1].map{$0.1}
+                                                                                                 .reduce(0, combine:{$0 + $1})/Double(trialResponseCodeAndTime.count * 1/3)
+        print(taskMeanResponseTime,firstThirdMeanResponseTime,secondThirdMeanResponseTime,lastThirdMeanResponseTime)
+        
+        // Range Response Time
+        let taskMaxResponseTime = trialResponseCodeAndTime.map{$0.1}.maxElement()
+        let taskMinResponseTime = trialResponseCodeAndTime.map{$0.1}.minElement()
+        let firstThirdMaxResponseTime = trialResponseCodeAndTime[0...firstThird].map{$0.1}.maxElement()
+        let firstThirdMinResponseTime = trialResponseCodeAndTime[0...firstThird].map{$0.1}.minElement()
+        let secondThirdMaxResponseTime = trialResponseCodeAndTime[firstThird+1...secondThird].map{$0.1}.maxElement()
+        let secondThirdMinResponseTime = trialResponseCodeAndTime[firstThird+1...secondThird].map{$0.1}.minElement()
+        let lastThirdMaxResponseTime = trialResponseCodeAndTime[secondThird+1...results.count-1].map{$0.1}.maxElement()
+        let lastThirdMinResponseTime = trialResponseCodeAndTime[secondThird+1...results.count-1].map{$0.1}.minElement()
+        print(taskMaxResponseTime,taskMinResponseTime)
+        print(firstThirdMaxResponseTime,firstThirdMinResponseTime)
+        print(secondThirdMaxResponseTime,secondThirdMinResponseTime)
+        print(lastThirdMaxResponseTime,lastThirdMinResponseTime)
+        
+        //Variability
+        let taskExpression = NSExpression(forFunction: "stddev:", arguments: [NSExpression(forConstantValue:trialResponseCodeAndTime.map{$0.1})])
+        let taskStd = taskExpression.expressionValueWithObject(nil, context: nil)
+        let firstThirdExpression = NSExpression(forFunction: "stddev:", arguments: [NSExpression(forConstantValue:trialResponseCodeAndTime[0...firstThird].map{$0.1})])
+        let firstThirdStd = firstThirdExpression.expressionValueWithObject(nil, context: nil)
+        let secondThirdExpression = NSExpression(forFunction: "stddev:", arguments: [NSExpression(forConstantValue:trialResponseCodeAndTime[firstThird+1...secondThird].map{$0.1})])
+        let secondThirdStd = secondThirdExpression.expressionValueWithObject(nil, context: nil)
+        let lastThirdExpression = NSExpression(forFunction: "stddev:", arguments: [NSExpression(forConstantValue:trialResponseCodeAndTime[secondThird+1...results.count-1].map{$0.1})])
+        let lastThirdStd = lastThirdExpression.expressionValueWithObject(nil, context: nil)
+        
+        
+        
+        
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
     }
     
