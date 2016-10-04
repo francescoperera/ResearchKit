@@ -171,13 +171,7 @@ class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate 
             self.performTrials(trials, results: [], completion: { (results) in
                 print(results)
                 // results is a list that contains all the trial results - Francesco
-                let aggregateResults = self.calculateAggregateResults(results)
-                print(aggregateResults)
-                print("The average response time was " + String(aggregateResults.0))
-                print("The total number of correct responses was " + String(aggregateResults.1))
-                print("The total number of incorrect responses was " + String(aggregateResults.2))
-                print("The total number of commissions was " + String(aggregateResults.3))
-                print("The total number of ommissions was " + String(aggregateResults.4))
+                self.calculateAggregateResults(results)
                 
             
                 if !self.canceled {
@@ -331,25 +325,85 @@ class CTFGoNoGoStepViewController: ORKStepViewController, CTFGoNoGoViewDelegate 
         }
     }
     
-    func calculateAggregateResults(results:[CTFGoNoGoTrialResult])->(Double,Int,Int,Int,Int){
+    func calculateAggregateResults(results:[CTFGoNoGoTrialResult]){
         /**
-         * uses data in results to calculate the following parameters:
-            1) mean response time
-            2) number of correct answers
-            3) number of incorrect answers
-            4) number of commissions ( hit when not supposed to)
-            5) number of ommisions ( not hit when supposed to )
+         * uses data in results to calculate the aggregate results.
         */
-//        let meanResponseTime = results.map{$0.responseTime!}.reduce(0, combine:{$0 + $1})/Double(results.count)
-//        print(meanResponseTime)
-//        let responses = results.map{checkResponse($0.trial, tapped: $0.tapped)}
-//        print(responses)
-//        let correctResponses = responses.filter{$0 == CTFGoNoGoResponseCode.correctGreen || $0 == CTFGoNoGoResponseCode.correctBlue}.count
-//        let incorrectResponses = responses.filter{$0 == CTFGoNoGoResponseCode.incorrectGreen || $0 == CTFGoNoGoResponseCode.incorrectBlue}.count
-//        let commissions = responses.filter{$0 == CTFGoNoGoResponseCode.incorrectBlue}.count
-//        let ommissions = responses.filter{$0 == CTFGoNoGoResponseCode.incorrectGreen}.count
-//        return (meanResponseTime,correctResponses,incorrectResponses,commissions,ommissions)
-        let trialResponseCodeAndTime = results.map{(checkResponse($0.trial, tapped: $0.tapped),$0.responseTime)}
+        
+        let firstThird = (results.count * 1/3) - 1
+        let secondThird = (results.count * 2/3) - 1
+        print(firstThird)
+        print(secondThird)
+        print(results.count - 1)
+        
+        let trialResponseCodeAndTime = results.map{(checkResponse($0.trial, tapped: $0.tapped),$0.responseTime!)}
+        print(trialResponseCodeAndTime)
+        
+        //Mean Response Time
+        let taskMeanResponseTime = trialResponseCodeAndTime.map{$0.1}.reduce(0, combine:{$0 + $1})/Double(results.count)
+        let firstThirdMeanResponseTime = trialResponseCodeAndTime[0...firstThird].map{$0.1}.reduce(0, combine:{$0 + $1})/Double(results.count * 1/3)
+        let secondThirdMeanResponseTime = trialResponseCodeAndTime[firstThird+1...secondThird].map{$0.1}.reduce(0, combine:{$0 + $1})/Double(results.count * 1/3)
+        let lastThirdMeanResponseTime = trialResponseCodeAndTime[secondThird+1...results.count-1].map{$0.1}.reduce(0, combine:{$0 + $1})/Double(results.count * 1/3)
+        print(taskMeanResponseTime,firstThirdMeanResponseTime,secondThirdMeanResponseTime,lastThirdMeanResponseTime)
+        
+        //Number of  Total Correct Responses
+        let taskNumCorrectResponses = trialResponseCodeAndTime.filter{$0.0 == CTFGoNoGoResponseCode.correctGreen || $0.0 == CTFGoNoGoResponseCode.correctBlue}.count
+        let firstThirdNumCorrectResponses = trialResponseCodeAndTime[0...firstThird].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen ||
+                                                                                            $0.0 == CTFGoNoGoResponseCode.correctBlue}.count
+        let secondThirdNumCorrectResponses = trialResponseCodeAndTime[firstThird+1...secondThird].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen ||
+                                                                                                         $0.0 == CTFGoNoGoResponseCode.correctBlue}.count
+        let lastThirdNumCorrectResponses = trialResponseCodeAndTime[secondThird+1...results.count-1].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen ||
+                                                                                                            $0.0 == CTFGoNoGoResponseCode.correctBlue}.count
+        print(taskNumCorrectResponses,firstThirdNumCorrectResponses,secondThirdNumCorrectResponses,lastThirdNumCorrectResponses)
+        
+        // Number of  Total Incorrect Responses
+        let taskNumIncorrectResponses = trialResponseCodeAndTime.filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen || $0.0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+        let firstThirdNumIncorrectResponses = trialResponseCodeAndTime[0...firstThird].filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen ||
+                                                                                              $0.0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+        let secondThirdNumIncorrectResponses = trialResponseCodeAndTime[firstThird+1...secondThird].filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen ||
+                                                                                                           $0.0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+        let lastThirdNumIncorrectResponses = trialResponseCodeAndTime[secondThird+1...results.count-1].filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen ||
+                                                                                                              $0.0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+        print(taskNumIncorrectResponses,firstThirdNumIncorrectResponses,secondThirdNumIncorrectResponses,lastThirdNumIncorrectResponses)
+        
+        // Number of Correct Blue Responses
+        let taskNumCorrectBlueResponses = trialResponseCodeAndTime.filter{$0.0 == CTFGoNoGoResponseCode.correctBlue}.count
+        let firstThirdNumCorrectBlueResponses = trialResponseCodeAndTime[0...firstThird].filter{$0.0 == CTFGoNoGoResponseCode.correctBlue}.count
+        let secondThirdNumCorrectBlueResponses = trialResponseCodeAndTime[firstThird+1...secondThird].filter{$0.0 == CTFGoNoGoResponseCode.correctBlue}.count
+        let lastThirdNumCorrectBlueResponses = trialResponseCodeAndTime[secondThird+1...results.count-1].filter{$0.0 == CTFGoNoGoResponseCode.correctBlue}.count
+        print(taskNumCorrectBlueResponses,firstThirdNumCorrectBlueResponses,secondThirdNumCorrectBlueResponses,lastThirdNumCorrectBlueResponses)
+        
+        //Number of Correct Green Responses
+        let taskNumCorrectGreenResponses = trialResponseCodeAndTime.filter{$0.0 == CTFGoNoGoResponseCode.correctGreen}.count
+        let firstThirdNumCorrectGreenResponses = trialResponseCodeAndTime[0...firstThird].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen}.count
+        let secondThirdNumCorrectGreenResponses = trialResponseCodeAndTime[firstThird+1...secondThird].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen}.count
+        let lastThirdNumCorrectGreenResponses = trialResponseCodeAndTime[secondThird+1...results.count-1].filter{$0.0 == CTFGoNoGoResponseCode.correctGreen}.count
+        print(taskNumCorrectGreenResponses,firstThirdNumCorrectGreenResponses,secondThirdNumCorrectGreenResponses,lastThirdNumCorrectGreenResponses)
+        
+        // Number of Incorrect Blue Responses
+        let taskNumIncorrectBlueResponses = trialResponseCodeAndTime.filter{$0.0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+        let firstThirdNumIncorrectBlueResponses = trialResponseCodeAndTime[0...firstThird].filter{$0.0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+        let secondThirdNumIncorrectBlueResponses = trialResponseCodeAndTime[firstThird+1...secondThird].filter{$0.0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+        let lastThirdNumIncorrectBlueResponses = trialResponseCodeAndTime[secondThird+1...results.count-1].filter{$0.0 == CTFGoNoGoResponseCode.incorrectBlue}.count
+        print(taskNumIncorrectBlueResponses,firstThirdNumIncorrectBlueResponses,secondThirdNumIncorrectBlueResponses,lastThirdNumIncorrectBlueResponses)
+        
+        //Number of Incorrect Green Responses
+        let taskNumIncorrectGreenResponses = trialResponseCodeAndTime.filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen}.count
+        let firstThirdNumIncorrectGreenResponses = trialResponseCodeAndTime[0...firstThird].filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen}.count
+        let secondThirdNumIncorrectGreenResponses = trialResponseCodeAndTime[firstThird+1...secondThird].filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen}.count
+        let lastThirdNumIncorrectGreenResponses = trialResponseCodeAndTime[secondThird+1...results.count-1].filter{$0.0 == CTFGoNoGoResponseCode.incorrectGreen}.count
+        print(taskNumIncorrectGreenResponses,firstThirdNumIncorrectGreenResponses,secondThirdNumIncorrectGreenResponses,lastThirdNumIncorrectGreenResponses)
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
     }
     
